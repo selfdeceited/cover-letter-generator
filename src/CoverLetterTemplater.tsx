@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import Markdown from "react-markdown";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
@@ -123,6 +123,15 @@ export function CoverLetterTemplater() {
   const [fields, setFields] = useState<CoverLetterFields>(loadFromStorage);
   const [isEditing, setIsEditing] = useState(true);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (!isEditing && fields.company) {
+      const slug = fields.company.toLowerCase().replace(/\s+/g, "-");
+      document.title = `cover-letter-${slug}`;
+    } else {
+      document.title = "Cover Letter Generator";
+    }
+  }, [isEditing, fields.company]);
 
   const handleChange =
     (key: keyof CoverLetterFields) =>
